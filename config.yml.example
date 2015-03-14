@@ -2,7 +2,7 @@ Toggl:
   api_key: '<your api key for toggl>'
   workspace_id: <id of a workspace you use in Toggl>
   user_agent: '<your email-address registered to Toggl>'
-  length: 3
+  length: 7
 GoogleCalendar:
   issuer: '<issuer name>@developer.gserviceaccount.com'
   calendarId: '<id of the calender in Google Calendar where events will be created>@group.calendar.google.com'
