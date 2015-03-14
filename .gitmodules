@@ -1,0 +1,3 @@
+[submodule "toggl_reports_v2"]
+	path = toggl_reports_v2
+	url = https://github.com/uyorum/toggl_reports_v2.git
