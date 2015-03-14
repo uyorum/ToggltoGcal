@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 require_relative 'TogglReportsClient'
-require_relative 'GoogleCalendarCLient'
+require_relative 'GoogleCalendarClient'
 require 'yaml'
 
 config = YAML.load_file("config.yml")
