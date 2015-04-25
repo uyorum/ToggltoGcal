@@ -35,4 +35,21 @@ class TogglReportsClient
     entries
   end
 
+  def have?(id)
+    now = DateTime.now
+
+    params = {
+      :user_agent => @conf['user_agent'],
+      :workspace_id => @conf['workspace_id'],
+      :until => now.to_s,
+      :since => (now - @conf['length'].to_i * 2).to_s,
+      :time_entry_ids => id.to_s
+    }
+
+    if @client.get("details", params)['total_count'] == 0
+      return false
+    else
+      return true
+    end
+  end
 end

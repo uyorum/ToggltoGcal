@@ -10,7 +10,6 @@ class GoogleCalendarClient
     #  :issuer
     #  :calendarId
     #  :password
-    @historyFilename = "history"
     @client = Google::APIClient.new(:application_name => 'ToggltoGcal')
      
     # authentication
@@ -26,37 +25,6 @@ class GoogleCalendarClient
     @params = {
       'calendarId' => hash['calendarId']
     }
-  end
-
-  def push(entries)
-    log = []
-    begin
-      Pathname.new(@historyFilename).open('rb') do |f|
-        log = Marshal.load(f)
-      end
-    rescue Errno::ENOENT
-      Pathname.new(@historyFilename).open('wb') do |f|
-        Marshal.dump([], f)
-      end
-    end
-    
-    entries.each do |entry|
-      item = log.find {|item| item['id'] == entry['id']}
-      if item == nil
-        # if there is no event in log
-        entry['eventid'] = insert(entry['start'], entry['end'], "#{entry['project']}: #{entry['description']}")
-      elsif DateTime.strptime(item['updated']) < DateTime.strptime(entry['updated'])
-        # if there is newer updated datetime
-        entry['eventid'] = update(item['eventid'], entry['start'], entry['end'], "#{entry['project']}: #{entry['description']}")
-      else
-        entry['eventid'] = item['eventid']
-      end
-    end
-    
-    Pathname.new(@historyFilename).open('wb') do |f|
-      Marshal.dump(entries, f)
-    end
-    
   end
 
   def insert(startDateTime, endDateTime, summary)
@@ -91,6 +59,11 @@ class GoogleCalendarClient
                                :body_object => body)
     JSON.parse(response.body)['id']
   end
-  
-  private :insert, :update   
+
+  def delete(eventid)
+    response = @client.execute(:api_method => @cal.events.delete,
+                               :parameters => @params.merge({'eventId' => eventid})
+                              )
+    nil
+  end
 end
